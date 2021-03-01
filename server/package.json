@@ -1,0 +1,38 @@
+{
+  "name": "skripsi",
+  "version": "1.0.0",
+  "description": "skripsi ",
+  "main": "server.js",
+  "scripts": {
+    "test": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rootSectornet/skripsi.git"
+  },
+  "keywords": [
+    "warehouse"
+  ],
+  "author": "Tedi Susanto",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rootSectornet/skripsi/issues"
+  },
+  "homepage": "https://github.com/rootSectornet/skripsi#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "crypto-js": "^4.0.0",
+    "express": "^4.17.1",
+    "express-group-routes": "^1.1.0",
+    "faker": "^5.1.0",
+    "helmet": "^4.1.0",
+    "js-base64": "^3.4.5",
+    "moment": "^2.29.1",
+    "mysql2": "^2.1.0",
+    "rijndael-js": "^2.0.0",
+    "sequelize": "^6.3.4",
+    "sequelize-cli": "^6.2.0"
+  }
+}
