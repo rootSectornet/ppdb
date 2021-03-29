@@ -1,22 +1,19 @@
 <script>
 import router from "@/router";
 
-import NavBar from "@/components/nav-bar";
-import SideBar from "@/components/side-bar";
-import RightBar from "@/components/right-bar";
 import Footer from "@/components/footer";
 
 export default {
-  components: { NavBar, SideBar, RightBar, Footer },
+  components: {  Footer,},
   data() {
     return {
       isMenuCondensed: false
     };
   },
   created: () => {
-    document.body.removeAttribute("data-layout", "horizontal");
-    document.body.removeAttribute("data-topbar", "dark");
-    document.body.removeAttribute("data-layout-size", "boxed");
+    document.body.setAttribute("data-layout", "horizontal");
+      document.body.setAttribute("data-layout-size", "boxed");
+      document.body.setAttribute("data-topbar", "dark");
   },
   methods: {
     toggleMenu() {
@@ -50,8 +47,6 @@ export default {
 
 <template>
   <div id="layout-wrapper">
-    <NavBar />
-    <SideBar :is-condensed="isMenuCondensed" />
     <!-- ============================================================== -->
     <!-- Start Page Content here -->
     <!-- ============================================================== -->
@@ -65,6 +60,5 @@ export default {
       </div>
       <Footer />
     </div>
-    <RightBar />
   </div>
 </template>

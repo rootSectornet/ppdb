@@ -11,7 +11,7 @@ export default {};
         <div class="col-7">
           <div class="text-primary p-3">
             <h5 class="text-primary">Welcome Back !</h5>
-            <p>Skote Dashboard</p>
+            <p>TESUJIAN.COM</p>
           </div>
         </div>
         <div class="col-5 align-self-end">
@@ -25,25 +25,25 @@ export default {};
           <div class="avatar-md profile-user-wid mb-4">
             <img src="@/assets/images/users/avatar-1.jpg" alt class="img-thumbnail rounded-circle" />
           </div>
-          <h5 class="font-size-15 text-truncate">Sofia Price</h5>
-          <p class="text-muted mb-0 text-truncate">UI/UX Designer</p>
+          <h5 class="font-size-15 text-truncate">Rita Rianti</h5>
+          <p class="text-muted mb-0 text-truncate">SD Negeri 5 Padang</p>
         </div>
 
         <div class="col-sm-8">
           <div class="pt-4">
             <div class="row">
               <div class="col-6">
-                <h5 class="font-size-15">125</h5>
-                <p class="text-muted mb-0">Projects</p>
+                <h5 class="font-size-15">80.5</h5>
+                <p class="text-muted mb-0">Nilai</p>
               </div>
               <div class="col-6">
-                <h5 class="font-size-15">$1245</h5>
-                <p class="text-muted mb-0">Revenue</p>
+                <h5 class="font-size-15">12</h5>
+                <p class="text-muted mb-0">Rangking</p>
               </div>
             </div>
             <div class="mt-4">
               <a href class="btn btn-primary btn-sm">
-                View Profile
+                Lihat Profil
                 <i class="mdi mdi-arrow-right ml-1"></i>
               </a>
             </div>

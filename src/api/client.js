@@ -2,7 +2,7 @@
 const axios = require('axios');
 class Client{
     constructor(){
-        this._BASEURL = "http://localhost:3000/api/";
+        this._BASEURL = "https://api.tesujian.com/v1/";
     }
     getBaseUrl(){
         return this._BASEURL;

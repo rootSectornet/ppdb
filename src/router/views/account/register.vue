@@ -2,6 +2,8 @@
 import { authMethods } from "@/state/helpers";
 import Layout from "../../layouts/auth";
 import appConfig from "@/app.config";
+import DatePicker from "vue2-datepicker";
+import Multiselect from "vue-multiselect";
 
 /**
  * Register component
@@ -11,19 +13,54 @@ export default {
     title: "Register",
     meta: [{ name: "description", content: appConfig.description }]
   },
-  components: { Layout },
+  components: { Layout,DatePicker,Multiselect },
   data() {
     return {
       username: "",
       email: "",
       password: "",
       regError: null,
+      jenisKelamin : null,
+      jkOptions : ["Laki - Laki","Perempuan"],
+      tglLahir : new Date(),
       tryingToRegister: false,
       isRegisterError: false,
-      registerSuccess: false
+      registerSuccess: false,
+      provinsi : null,
+      kota : null,
+      sekolah : null,
+      trackBy: 'id',
     };
   },
+  computed:{
+    provinsiOption(){
+      // @ts-ignore
+      return this.$store.getters["area/getProvinsi"];
+    },
+    kotaOption(){
+      // @ts-ignore
+      return this.$store.getters["area/getKota"];
+    },
+    sekolahOption(){
+      // @ts-ignore
+      return this.$store.getters["sekolah/getSekolah"];
+    }
+  },
+  mounted(){
+    // eslint-disable-next-line no-console
+    this.$store.dispatch("area/DataProvinsi")
+  },
   methods: {
+    pronvinsiChange(e){
+      // eslint-disable-next-line no-console
+      console.log(e)
+      this.$store.dispatch("area/DataKota",e.id)
+    },
+    kotaChange(e){
+      // eslint-disable-next-line no-console
+      console.log(e)
+      this.$store.dispatch("sekolah/DataSekolah",e.id)
+    },
     ...authMethods,
     // Try to register the user in with the email, username
     // and password they provided.
@@ -68,7 +105,7 @@ export default {
               <div class="col-7">
                 <div class="text-primary p-4">
                   <h5 class="text-primary">Silahkan Daftar</h5>
-                  <p>Buatlah Akun untuk test ujian mu.</p>
+                  <p>Lengkapi dulu Data Diri mu dibawah ini yah!.</p>
                 </div>
               </div>
               <div class="col-5 align-self-end">
@@ -102,12 +139,12 @@ export default {
             >{{regError}}</b-alert>
 
             <b-form class="p-2" @submit.prevent="tryToRegisterIn">
-              <b-form-group id="email-group" label="Username" label-for="username">
+              <b-form-group id="email-group" label="Nama Lengkap: " label-for="nama">
                 <b-form-input
-                  id="username"
+                  id="nama"
                   v-model="username"
                   type="text"
-                  placeholder="Enter username"
+                  placeholder="Masukan Nama Lengkap mu"
                 ></b-form-input>
               </b-form-group>
 
@@ -122,6 +159,32 @@ export default {
                   type="password"
                   placeholder="Enter password"
                 ></b-form-input>
+              </b-form-group>
+
+              <b-form-group id="tglLahir" label="Tanggal Lahir :" label-for="tglLahir">
+                <date-picker v-model="tglLahir" :first-day-of-week="1" lang="en"></date-picker>
+              </b-form-group>
+
+              <b-form-group id="jenisKelamin" label="Jenis Kelamin :" label-for="jenisKelamin">
+                <multiselect v-model="jenisKelamin" :options="jkOptions"></multiselect>
+              </b-form-group>
+
+              <b-form-group id="Pronvisi" label="Pronvisi :" label-for="Pronvisi">
+                <multiselect v-model="provinsi" :options="provinsiOption" :track-by="trackBy" @input="pronvinsiChange" label="name">
+                    <template slot="singleLabel" slot-scope="{ option }"><strong>{{ option.name }}</strong></template>
+                </multiselect>
+              </b-form-group>
+
+              <b-form-group id="Kota" label="Kota :" label-for="Kota">
+                <multiselect v-model="kota" :options="kotaOption" :track-by="trackBy" @input="kotaChange" label="name">
+                    <template slot="singleLabel" slot-scope="{ option }"><strong>{{ option.name }}</strong></template>
+                </multiselect>
+              </b-form-group>
+
+              <b-form-group id="Sekolah" label="Sekolah :" label-for="Sekolah">
+                <multiselect v-model="sekolah" :options="sekolahOption" :track-by="trackBy" label="name">
+                    <template slot="singleLabel" slot-scope="{ option }"><strong>{{ option.name }}</strong></template>
+                </multiselect>
               </b-form-group>
 
               <div class="mt-4">

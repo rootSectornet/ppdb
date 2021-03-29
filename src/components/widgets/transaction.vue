@@ -24,54 +24,20 @@ export default {
     <table class="table table-centered table-nowrap">
       <thead class="thead-light">
         <tr>
-          <th style="width: 20px;">
-            <div class="custom-control custom-checkbox">
-              <input id="customCheck" type="checkbox" class="custom-control-input" />
-              <label class="custom-control-label" for="customCheck">&nbsp;</label>
-            </div>
-          </th>
-          <th>Order ID</th>
-          <th>Billing Name</th>
-          <th>Date</th>
-          <th>Total</th>
-          <th>Payment Status</th>
-          <th>Payment Method</th>
-          <th>View Details</th>
+          <th>Rangking</th>
+          <th>Nama</th>
+          <th>Nilai</th>
+          <th>Asal Sekolah</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="data in transactions" :key="data.id">
           <td>
-            <div class="custom-control custom-checkbox">
-              <input :id="`customCheck${data.index}`" type="checkbox" class="custom-control-input" />
-              <label class="custom-control-label" :for="`customCheck${data.index}`">&nbsp;</label>
-            </div>
-          </td>
-          <td>
-            <a href="javascript: void(0);" class="text-body font-weight-bold">{{data.id}}</a>
+            {{data.id}}
           </td>
           <td>{{data.name}}</td>
           <td>{{data.date}}</td>
           <td>{{data.total}}</td>
-          <td>
-            <span
-              class="badge badge-pill badge-soft-success font-size-12"
-              :class=" { 'badge-soft-danger': `${data.status}` === 'Chargeback',
-                        'badge-soft-warning': `${data.status}` === 'Refund' }"
-            >{{data.status}}</span>
-          </td>
-          <td>
-            <i :class="`fab ${data.payment[0]} mr-1`"></i>
-            {{data.payment[1]}}
-          </td>
-          <td>
-            <!-- Button trigger modal -->
-            <button
-              type="button"
-              class="btn btn-primary btn-sm btn-rounded"
-              @click="showModal = true"
-            >View Details</button>
-          </td>
         </tr>
       </tbody>
     </table>

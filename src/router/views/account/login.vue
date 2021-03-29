@@ -56,8 +56,15 @@ export default {
 
 <template>
   <Layout>
-    <div class="row justify-content-center">
-      <div class="col-md-8 col-lg-6 col-xl-5">
+    <div class="row justify-content-between">
+      <div class="col-md-7 col-lg-7 col-xl-7">
+        <h1 class="title">Tesujian</h1>
+        <br>
+        <br>
+        <h2 class="slogan">Raih pencapaian nilai maksimal bersama Tes Ujian</h2>
+        <p>Kami memberikanmu soal-soal berkualitas dan bermutu</p>
+      </div> 
+      <div class="col-md-5 col-lg-5 col-xl-5">
         <div class="card overflow-hidden">
           <div class="bg-soft-primary">
             <div class="row">
