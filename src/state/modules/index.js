@@ -3,6 +3,7 @@
 // as the camelCase equivalent of their file name.
 
 import camelCase from 'lodash/camelCase'
+export const strict = false
 
 const modulesCache = {}
 const storeData = { modules: {} }

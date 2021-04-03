@@ -3,6 +3,7 @@
 /**
  * Monthly-Earning component
  */
+import Multiselect from "vue-multiselect";
 export default {
   data() {
     return {
@@ -46,22 +47,35 @@ export default {
         stroke: {
           dashArray: 4
         },
-        labels: ["Total Kursi"]
+        labels: ["Ujian Di Ikuti"]
       },
-      series: [200]
+      // series: [200],
+      trackBy: 'id',
+      jenjangSelected : null
+
     };
   },
+  components: {Multiselect },
   computed: {
-    state() { return this.$store.getters['state/stateTest'] }
+    state() { return this.$store.getters['state/stateTest'] },
+    jenjangs() { return this.$store.getters['jenjang/jenjangs'] },
+    rataRata() { return this.$store.getters['tryout/rataRata'] },
+    terendah() { return this.$store.getters['tryout/terendah'] },
+    tertinggi() { return this.$store.getters['tryout/tertinggi'] },
+    series() { return [this.$store.getters['tryout/totalDiikuti']] },
+  },
+  mounted(){
+      this.$store.dispatch("jenjang/getJenjang")
   },
   methods:{
     start(){
-      if(this.state == "RANGKING"){
-         this.$store.commit("state/SET_STATE","INTRO");
-      }else{
-         this.$store.commit("state/SET_STATE","RANGKING");
-      }
-    }
+      this.$store.commit("state/SET_STATE","RANGKING");
+    },
+    jenjangChange(e){
+      // eslint-disable-next-line no-console
+      this.$store.commit("tryout/SET_IDJENJANG",e.id)
+      this.$store.dispatch("tryout/getHistory")
+    },
   }
 };
 </script>
@@ -69,28 +83,32 @@ export default {
 <template>
   <div class="card">
     <div class="card-body">
-      <h4 class="card-title mb-4">Hasil Test</h4>
+      <div class="d-flex flex-column justify-content-between mb-4">
+          <h4 class="card-title ">Analisa Hasil Ujianmu</h4>
+          <multiselect v-model="jenjangSelected"  @input="jenjangChange"  :options="jenjangs" :track-by="trackBy" label="jenjang">
+              <template slot="singleLabel" slot-scope="{ option }"><strong>{{ option.jenjang }}</strong></template>
+          </multiselect>
+      </div>
       <div class="row">
         <div class="col-sm-6">
-          <p class="text-muted">Sisa Kuota Kursi</p>
-          <h3>79 </h3>
+          <p class="text-muted">Rata Rata nilaimu</p>
+          <h3>{{rataRata}} </h3>
           <p class="text-muted">
             <span class="text-danger mr-2">
-              60.5
+              {{terendah}}
               <i class="mdi mdi-arrow-down"></i>
             </span> Nilai Terendah
           </p>
           <p class="text-muted">
             <span class="text-success mr-2">
-              95.4
+              {{tertinggi}}
               <i class="mdi mdi-arrow-up"></i>
             </span> Nilai Tertinggi
           </p>
 
           <div class="mt-4">
             <a href="javascript: void(0);" @click="start()" class="btn btn-primary btn-sm">
-              <span v-if="this.state == 'RANGKING'">Mulai Test</span>
-              <span v-else>Lihat Peringkat</span>
+              <span>Mulai Test</span>
               <i class="mdi mdi-arrow-right ml-1"></i>
             </a>
           </div>

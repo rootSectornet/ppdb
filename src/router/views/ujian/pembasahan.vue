@@ -38,8 +38,10 @@ export default {
         .then((result)=>{
             result = result.map((v)=>{
                 var newChoice = v.choice.map((c)=>{
+                    var variant = c.choice == v.jawaban_user && v.jawaban_user == v.jawaban_benar ? 'succcess' : c.choice == v.jawaban_user ? 'danger' : c.choice == v.jawaban_benar ? 'info' : 'light';
                     return {
                         jawab : false,
+                        variant : variant,
                         ...c
                     }
                 })
@@ -73,34 +75,12 @@ export default {
         this.indexSoal = index;
         this.currentSoal = this.soals[index];
     },
-    // eslint-disable-next-line no-unused-vars
-    jawab(index){
-        this.soals[this.indexSoal].newChoice.forEach(e => {
-            e.jawab = false;
-        });
-        this.soals[this.indexSoal].jawaban_user = this.soals[this.indexSoal].newChoice[index].choice
-        this.soals[this.indexSoal].newChoice[index].jawab = true;
-        this.next();
-    },
     doneAnswer(id){
         const jawab = this.jawabans.find(el=>el.id == id)
         return jawab != undefined;
     },
-    kumpulkan(){
-        this.loading = true;
-        Promise.all([this.soals.forEach((v)=>{
-            var formData = new FormData();
-            formData.append("id",v.id_tryoutDetailSoals)
-            formData.append("jawaban_user",v.jawaban_user)
-            tryout.kumpulkan(formData);
-        })]).then((values) => {
-            console.log("siapsssai?"+values);
-            tryout.finishMatpel(this.tryoutDetail.id).then((res)=>{
-                console.log(res);
-                this.$store.dispatch("tryout/getMatpelTryout",this.idTryout)
-            })
-            this.loading = false;
-        });
+    kembali(){
+      this.$store.commit("state/SET_STATE","PARSINGGRADE");
     }
   }
 };
@@ -114,9 +94,13 @@ export default {
         </div>
         <div class="card" v-else>
             <div class="card-body d-flex justify-content-between">
-                <h4 class="card-title">{{matpel.nama}}</h4>
+                <div>
+                    <h4 class="card-title">{{matpel.nama}}</h4>
+                    <p class="font-size-10 pb-0 mb-0">Benar : {{matpel.totalBenar}} soal</p>
+                    <p class="font-size-10 pb-0 mb-0">Salah : {{matpel.totalSalah}} soal</p>
+                </div>
                 <div class="pull-right">
-                    <button class="btn btn-primary btn-sm" :disabled="loading" @click="kumpulkan()">Kumpulkan </button>
+                    <button class="btn btn-primary btn-sm" :disabled="loading" @click="kembali()">Lihat Mata Pelajaran Lainnya </button>
                 </div>
             </div> 
         </div>
@@ -132,10 +116,22 @@ export default {
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Pilih Jawaban Yang tepat</h4>
+                        <h4 v-if="this.soals[this.indexSoal].jawaban_user == null || this.soals[this.indexSoal].jawaban_user == 'null'" class="card-title">Anda Tidak Menjawab Soal ini</h4>
+                        <h4 v-else  class="card-title">Jawaban Anda {{this.soals[this.indexSoal].jawaban_benar ==this.soals[this.indexSoal].jawaban_user ? "Benar" : "Salah" }}</h4>
                         <b-list-group>
-                            <b-list-group-item v-for="(choice,index) in this.soals[this.indexSoal].newChoice" :key="index" button @click="jawab(index)" :active="choice.jawab || choice.choice == soals[indexSoal].jawaban_user"><span class="font-size-18 font-weight-bolder mr-2">{{String.fromCharCode(65+index)}}. &nbsp;&nbsp;</span>&nbsp;{{choice.choice}}</b-list-group-item>
+                            <b-list-group-item v-for="(choice,index) in this.soals[this.indexSoal].newChoice" :key="index" button :variant="choice.variant"><span class="font-size-18 font-weight-bolder mr-2">{{String.fromCharCode(65+index)}}. &nbsp;&nbsp;</span>&nbsp;{{choice.choice}}</b-list-group-item>
+                        </b-list-group><br>
+                        <h4 class="card-title">Jawaban Benar Adalah <br></h4>
+                        <b-list-group>
+                            <b-list-group-item button ><span class="font-size-18 font-weight-bolder mr-2"></span>&nbsp;{{this.soals[this.indexSoal].jawaban_benar}}</b-list-group-item>
                         </b-list-group>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Pembahasan</h4>
+                        <div v-if="this.soals[this.indexSoal].imgPembahasan" v-html="this.soals[this.indexSoal].pembahasan"></div>
+                        <img v-else :src="`http://103.41.207.247:3000/${this.soals[this.indexSoal].pembahasan}`" alt="" width="100%">
                     </div>
                 </div>
             </div>
@@ -148,7 +144,7 @@ export default {
                     <div class="card-body">
                         <h4 class="card-title">Nomor</h4>
                         <div class="d-flex flex-wrap  align-items-justify  justify-content-start">
-                            <b-button size="sm" pill class="m-2 btn-soal"  v-for="(soal,index) in soals" :key="index" :variant="soal.jawaban_user !==null ?'success': (index==indexSoal) ? 'primary' :'outline-primary'" @click="gotoIndex(index)">{{index + 1}}</b-button>
+                            <b-button size="sm" pill class="m-2 btn-soal"  v-for="(soal,index) in soals" :key="index" :variant="index==indexSoal ? 'outline-primary' : 'success'" @click="gotoIndex(index)">{{index + 1}}</b-button>
                         </div>
                     </div>
                 </div>

@@ -2,11 +2,25 @@
 /**
  * Profile component
  */
+import Swal from "sweetalert2";
 export default {
+  computed:{
+    matpels(){
+      // @ts-ignore
+      return this.$store.getters["tryout/matpels"];
+    },
+    idTryout() { return this.$store.getters['tryout/idTryout'] },
+  },
   methods:{
-    start(){
-        this.$store.commit("state/SET_STATE","SOAL");
-        this.$store.commit("state/SET_MATPEL",{id:1,nama:"B. Indonesia"});
+    start(tryoutDetail){
+        if(tryoutDetail.status == 1){
+          Swal.fire("Mata Pelajaran Ini Sudah Anda Kerjakan", "Silahkan Anda Kerjakan Mata Pelajaran Lainnya", "warning");
+        }else{
+          this.$store.dispatch("tryout/getSoals",tryoutDetail)
+        }
+    },
+    finish(){
+      this.$store.dispatch("tryout/finishTryout",this.idTryout)
     }
   }};
 </script>
@@ -20,80 +34,32 @@ export default {
             <div class="table-responsive mt-4">
               <table class="table table-centered">
                 <tbody>
-                  <tr>
+                  <tr v-for="matpel in matpels" :key="matpel.id">
                     <td style="width: 140px">
-                     <a href="javascript: void(0);"   @click="start()" > <p class="mb-0">B. Indonesia</p></a>
+                     <a href="javascript: void(0);"   @click="start(matpel)" > <p class="mb-0">{{matpel.nama}}</p></a>
                     </td>
-                    <td style="width: 120px">
-                      <h5 class="mb-0">60</h5>
+                    <td style="width: 120px" v-if="matpel.status == 1">
+                      <h5 class="mb-0">{{matpel.nilai}}</h5>
                     </td>
-                    <td>
+                    <td v-if="matpel.status == 1">
                         <b-progress class="mt-2" :max="50" show-value>
-                        <b-progress-bar :value="30" variant="success">30 Benar</b-progress-bar>
-                        <b-progress-bar :value="20" variant="danger">20 Salah</b-progress-bar>
+                        <b-progress-bar :value="30" variant="success">{{matpel.totalBenar}} Benar</b-progress-bar>
+                        <b-progress-bar :value="20" variant="danger">{{matpel.totalSalah}}  Salah</b-progress-bar>
                         </b-progress>
                     </td>
-                    <td style="width: 120px">
-                      <h5 class="mb-0">50 Soal</h5>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="width: 140px">
-                     <a href="javascript: void(0);"> <p class="mb-0">Matematika</p></a>
+                    <td v-else>
+                        <p><b-badge variant="warning">Belum Di Kerjakan</b-badge></p>
                     </td>
                     <td style="width: 120px">
-                      <h5 class="mb-0">40</h5>
-                    </td>
-                    <td>
-                        <b-progress class="mt-2" :max="40" show-value>
-                        <b-progress-bar :value="15" variant="success">15 Benar</b-progress-bar>
-                        <b-progress-bar :value="25" variant="danger">25 Salah</b-progress-bar>
-                        </b-progress>
-                    </td>
-                    <td style="width: 120px">
-                      <h5 class="mb-0">40 Soal</h5>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="width: 140px">
-                     <a href="javascript: void(0);"> <p class="mb-0">IPA</p></a>
-                    </td>
-                    <td style="width: 120px">
-                      <h5 class="mb-0">75</h5>
-                    </td>
-                    <td>
-                        <b-progress class="mt-2" :max="40" show-value>
-                        <b-progress-bar :value="25" variant="success">25 Benar</b-progress-bar>
-                        <b-progress-bar :value="15" variant="danger">15 Salah</b-progress-bar>
-                        </b-progress>
-                    </td>
-                    <td style="width: 120px">
-                      <h5 class="mb-0">40 Soal</h5>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="width: 140px">
-                     <a href="javascript: void(0);"> <p class="mb-0">B. Inggris</p></a>
-                    </td>
-                    <td style="width: 120px">
-                      <h5 class="mb-0">90</h5>
-                    </td>
-                    <td>
-                        <b-progress class="mt-2" :max="40" show-value>
-                        <b-progress-bar :value="30" variant="success">30 Benar</b-progress-bar>
-                        <b-progress-bar :value="10" variant="danger">10 Salah</b-progress-bar>
-                        </b-progress>
-                    </td>
-                    <td style="width: 120px">
-                      <h5 class="mb-0">40 Soal</h5>
+                      <h5 class="mb-0">{{matpel.jumlah_soal}} Soal</h5>
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
-        <p><b-badge variant="warning">Note</b-badge> <i class="font-size-10">Kerjakan Sebaik Mungkin, Rangking anda bisa saja tergantikan oleh peserta lain yang memiliki nilai lebih tinggi dari anda</i></p>
+        <p><b-badge variant="warning">Note</b-badge> <i class="font-size-10">Kerjakan Sebaik Mungkin, Nilai yang anda dapatkan bisa menjadi acuan untuk masuk ke sekolah favorit anda</i></p>
         <div class="img-center d-flex justify-content-center align-items-center">
-            <button class="btn btn-outline-primary btn-pill">Selesai & Kumpulkan</button>
+            <button class="btn btn-outline-primary btn-pill" @click="finish()">Selesai & Kumpulkan</button>
         </div>
     </div> 
   </div>

@@ -18,6 +18,9 @@ export const getters = {
     loggedIn(state) {
         return !!state.currentUser
     },
+    user(state){
+        return state.currentUser;
+    }
 }
 
 export const actions = {
@@ -29,14 +32,21 @@ export const actions = {
     },
 
     // Logs in the current user.
-    logIn({ commit, dispatch, getters }, { email, password } = {}) {
+    logIn(context, { email, password } = {}) {
+        const { commit, dispatch, getters } = context;
         if (getters.loggedIn) return dispatch('validate')
-        user.login(email, password).then((res) => {
-            commit('SET_CURRENT_USER', res)
-            return password
-        }).catch((e) => { 
-            return e;
-        })
+        return new Promise((resolve, reject) => {
+            user.login(email,password)
+            .then((result)=>{
+                if(result.success){
+                    commit('SET_CURRENT_USER', result.data_login.data_murid);
+                    resolve(result.success);
+                }else{
+                    reject(result.data_login);
+                }
+            })
+            .catch(err=>reject(err));
+        });
     },
 
     // Logs out the current user.

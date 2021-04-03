@@ -51,8 +51,8 @@ export default {
     <!-- Start Page Content here -->
     <!-- ============================================================== -->
 
-    <div class="main-content">
-      <div class="page-content">
+    <div class="main-content px-4">
+      <div class="page-content mx-4">
         <!-- Start Content-->
         <div class="container-fluid">
           <slot />

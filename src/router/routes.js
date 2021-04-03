@@ -61,6 +61,23 @@ export default [
     },
   },
   {
+    path: '/otp',
+    name: 'Otp',
+    component: () => import('./views/account/verifycode'),
+    meta: {
+      beforeResolve(routeTo, routeFrom, next) {
+        // If the user is already logged in
+        if (store.getters['auth/loggedIn']) {
+          // Redirect to the home page instead
+          next({ name: 'home' })
+        } else {
+          // Continue to the login page
+          next()
+        }
+      },
+    },
+  },
+  {
     path: '/logout',
     name: 'logout',
     meta: {

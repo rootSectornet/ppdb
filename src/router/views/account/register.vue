@@ -1,10 +1,10 @@
 <script>
-import { authMethods } from "@/state/helpers";
 import Layout from "../../layouts/auth";
 import appConfig from "@/app.config";
 import DatePicker from "vue2-datepicker";
 import Multiselect from "vue-multiselect";
-
+const User = require('./../../../api/users');
+const user = new User();
 /**
  * Register component
  */
@@ -61,35 +61,31 @@ export default {
       console.log(e)
       this.$store.dispatch("sekolah/DataSekolah",e.id)
     },
-    ...authMethods,
     // Try to register the user in with the email, username
     // and password they provided.
     tryToRegisterIn() {
       this.tryingToRegister = true;
       // Reset the regError if it existed.
       this.regError = null;
-      return (
-        this.register({
-          email: this.email,
-          password: this.password
-        })
-          // eslint-disable-next-line no-unused-vars
-          .then(token => {
-            this.tryingToRegister = false;
-            this.isRegisterError = false;
-            this.registerSuccess = true;
-            if (this.registerSuccess) {
-              this.$router.push(
-                this.$route.query.redirectFrom || { name: "home" }
-              );
-            }
-          })
-          .catch(error => {
-            this.tryingToRegister = false;
-            this.regError = error ? error : "";
-            this.isRegisterError = true;
-          })
-      );
+      let formData = new FormData();
+      formData.append("id_sekolah",this.sekolah.id)
+      formData.append("name",this.username)
+      formData.append("email",this.email)
+      formData.append("password",this.password)
+      formData.append("tgl_lahir",this.tglLahir)
+      formData.append("kelamin",this.jenisKelamin)
+      user.register(formData).then((result)=>{
+        this.tryingToRegister = false;
+        this.registerSuccess = true
+        this.regError = result;
+        this.$router.push(
+          this.$route.query.redirectFrom || { name: "Otp" }
+        );
+      }).catch(err=>{
+        this.isRegisterError = true
+        this.tryingToRegister = false;
+        this.regError = err;
+      });
     }
   }
 };
@@ -138,7 +134,7 @@ export default {
               dismissible
             >{{regError}}</b-alert>
 
-            <b-form class="p-2" @submit.prevent="tryToRegisterIn">
+            <b-form class="p-2">
               <b-form-group id="email-group" label="Nama Lengkap: " label-for="nama">
                 <b-form-input
                   id="nama"
@@ -188,7 +184,7 @@ export default {
               </b-form-group>
 
               <div class="mt-4">
-                <b-button type="submit" variant="primary" class="btn-block">Register</b-button>
+                <b-button type="button" variant="primary" @click="tryToRegisterIn()" class="btn-block" :disabled="tryingToRegister">Register</b-button>
               </div>
 
               <div class="mt-4 text-center">
